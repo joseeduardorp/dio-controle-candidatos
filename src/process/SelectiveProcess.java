@@ -2,30 +2,29 @@ package process;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class SelectiveProcess {
-  private String[] candidates = {};
+  private Candidate[] candidates = {};
   private final double baseSalary = 2000d;
 
-  public SelectiveProcess(String[] candidates) {
+  public SelectiveProcess(Candidate[] candidates) {
     this.candidates = candidates;
   }
 
   public void init() {
-    ArrayList<String> filteredCandidates = filterCandidates();
+    ArrayList<Candidate> filteredCandidates = filterCandidates();
     printCandidates(filteredCandidates);
     limiter();
     contactCandidates(filteredCandidates);
   }
 
-  private ArrayList<String> filterCandidates() {
+  private ArrayList<Candidate> filterCandidates() {
     int currentCandidate = 0;
-    ArrayList<String> selectedCandidates = new ArrayList<String>();
+    ArrayList<Candidate> selectedCandidates = new ArrayList<Candidate>();
 
     while (selectedCandidates.size() < 5 && currentCandidate < this.candidates.length) {
-      String candidate = this.candidates[currentCandidate];
-      double salaryExpectation = salaryExpectation();
+      Candidate candidate = this.candidates[currentCandidate];
+      double salaryExpectation = candidate.getSalaryExpectation();
 
       if (this.baseSalary >= salaryExpectation) {
         selectedCandidates.add(candidate);
@@ -37,21 +36,23 @@ public class SelectiveProcess {
     return selectedCandidates;
   }
 
-  private void printCandidates(ArrayList<String> candidates) {
-    System.out.println("Candidatos selecionados:");
+  private void printCandidates(ArrayList<Candidate> candidates) {
+    printTitle("Candidatos selecionados:");
 
-    for (String candidate : candidates) {
-      System.out.println("- " + candidate);
+    for (Candidate candidate : candidates) {
+      System.out.println("- " + candidate.getName());
     }
   }
 
-  private void contactCandidates(ArrayList<String> candidates) {
-    for (String candidate : candidates) {
+  private void contactCandidates(ArrayList<Candidate> candidates) {
+    printTitle("Tentando contato com os candidatos:");
+
+    for (Candidate candidate : candidates) {
       callTheCandidate(candidate);
     }
   }
 
-  private void callTheCandidate(String candidate) {
+  private void callTheCandidate(Candidate candidate) {
     int attempts = 1;
     boolean keepTrying = true;
     boolean attendedTo = false;
@@ -66,22 +67,24 @@ public class SelectiveProcess {
     } while (keepTrying & attempts < 3);
 
     if (attendedTo) {
-      System.out.println("Conseguimos contato com " + candidate + " na " + attempts + "ª tentativa.");
+      System.out.println("Conseguimos contato com " + candidate.getName() + " na " + attempts + "ª tentativa.");
     } else {
-      System.out.println("Nâo conseguimos contato com " + candidate + ", número máximo de tentativas excedido!");
+      System.out
+          .println("Nâo conseguimos contato com " + candidate.getName() + ", número máximo de tentativas excedido!");
     }
   }
 
   // métodos auxiliares
-  private double salaryExpectation() {
-    return ThreadLocalRandom.current().nextDouble(1800, 2200);
-  }
-
   private boolean attend() {
     return new Random().nextInt(3) == 1;
   }
 
   private void limiter() {
     System.out.println("=".repeat(75));
+  }
+
+  private void printTitle(String title) {
+    System.out.println(title);
+    System.out.println("-".repeat(title.length()));
   }
 }

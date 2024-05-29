@@ -1,18 +1,19 @@
+import process.Candidate;
 import process.SelectiveProcess;
 
 public class App {
   public static void main(String[] args) {
-    String[] candidates = {
-        "Felipe",
-        "Marcia",
-        "Julia",
-        "Paulo",
-        "Augusto",
-        "Monica",
-        "Fabricio",
-        "Mirela",
-        "Daniela",
-        "Jorge"
+    Candidate[] candidates = {
+        new Candidate("Felipe"),
+        new Candidate("Marcia"),
+        new Candidate("Julia"),
+        new Candidate("Paulo"),
+        new Candidate("Augusto"),
+        new Candidate("Monica"),
+        new Candidate("Fabricio"),
+        new Candidate("Mirela"),
+        new Candidate("Daniela"),
+        new Candidate("Jorge")
     };
 
     SelectiveProcess selectiveProcess = new SelectiveProcess(candidates);
